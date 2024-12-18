@@ -130,7 +130,8 @@ const loginUser = asyncHandler(async (req, res) => {
   );
   const options = {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production", // not work secure: true
+    // secure : true
+    // secure: process.env.NODE_ENV === "production", // not work secure: true
   };
 
   return res
@@ -150,16 +151,21 @@ const logoutUser = asyncHandler(async (req, res) => {
   await User.findByIdAndUpdate(
     req.user._id,
     {
-      $set: {
-        refreshToken: "",
-      },
+      // $set: {
+      //   refreshToken: "",
+      // },
+
+      $unset:{
+        refreshToken:1
+      }
     },
     { new: true }
   );
 
   const options = {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production", // get error not worked  secure : true
+    secure : true
+    // secure: process.env.NODE_ENV === "production", // get error not worked  secure : true
   };
 
   return res
@@ -261,7 +267,7 @@ const updateAccountDetails = asyncHandler(async (req, res) => {
     {
       new: true,
     }
-  ).select("-password, ");
+  ).select("-password");
   return res
     .status(200)
     .json(new ApiResponse(200, user, "Account Details update Successfully"));
